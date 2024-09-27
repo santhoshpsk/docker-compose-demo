@@ -1,0 +1,15 @@
+FROM python:3.9
+
+WORKDIR /usr/src/app
+
+COPY requirements.pip .
+
+RUN apt update -y && apt install -y curl iputils-ping vim
+
+RUN pip install -r requirements.pip
+
+RUN django-admin startproject mysite
+
+RUN sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \['\*'\]/" mysite/mysite/settings.py
+
+CMD ["python", "mysite/manage.py", "runserver", "0.0.0.0:8080"]
